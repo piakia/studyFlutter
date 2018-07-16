@@ -5,7 +5,7 @@
 .pub/
 
 build/
-.idea
+.idea/
 
 .vscode/
 
