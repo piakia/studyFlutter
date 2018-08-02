@@ -25,7 +25,7 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  //应用的资源文件 需要在这里声明后使用
+  #应用的资源文件 需要在这里声明后使用
   assets:
     - images/lake.jpg
     # - images/lake.jpg

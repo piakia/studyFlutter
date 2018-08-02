@@ -1,142 +1,193 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
+
+const globalWidth = 300.0;
+const globalHeight = 300.0;
+const globalBorder = 10.0;
 
 void main() {
-  runApp(InfoApp());
+  runApp(new InfoApp());
 }
 
 class InfoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print('hei hei');
-    Widget titleSection = Container(
-        padding: const EdgeInsets.all(32.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Text(
-                      "Oeschinen Lake CampGroud",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Text(
-                    "Kandersteg, Switzerland",
-                    style: TextStyle(color: Colors.grey[500]),
-                  )
-                ],
-              ),
-            ),
-            FavoriteWidget()
-          ],
-        ));
-
-    Widget buildButtonColumn(IconData icon, String label) {
-      Color color = Theme.of(context).primaryColor;
-
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: color,
-          ),
-          Text(
-            label,
-            style: TextStyle(
-                fontSize: 12.0, fontWeight: FontWeight.w400, color: color),
-          )
-        ],
-      );
-    }
-
-    Widget buttonSection = Container(
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        buildButtonColumn(Icons.call, 'CALL'),
-        buildButtonColumn(Icons.near_me, 'ROUTE'),
-        buildButtonColumn(Icons.share, 'SHARE'),
-      ]),
-    );
-
-    Widget testSection = Container(
-      padding: const EdgeInsets.all(32.0),
-      child: Text(
-        '''
-    Lake Oeschinen lies at the foot of the Blüemlisalp in the Bernese Alps. Situated 1,578 meters above sea level, it is one of the larger Alpine Lakes. A gondola ride from Kandersteg, followed by a half-hour walk through pastures and pine forest, leads you to the lake, which warms to 20 degrees Celsius in the summer. Activities enjoyed here include rowing, and riding the summer toboggan run.
-        ''',
-        softWrap: true,
-      ),
-    );
-
     return new MaterialApp(
-      title: 'Flutter Demo',
-      theme: new ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      title: 'interactive',
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Top Lakes'),
+          title: Text('interactive'),
         ),
-        body: ListView(
-          children: [
-            Image.asset(
-              'images/lake.jpg',
-              width: 600.0,
-              height: 240.0,
-              fit: BoxFit.cover,
-            ),
-            titleSection,
-            buttonSection,
-            testSection
-          ],
+        body: Center(
+          //TODO 
+          // child: TabBoxA(),
+          child: ParentWidget(),
         ),
       ),
     );
   }
 }
 
-class FavoriteWidget extends StatefulWidget {
+//------------------ TapBoxA -----------------------------
+//widget管理自己的state
+class TabBoxA extends StatefulWidget {
+  TabBoxA({Key key}) : super(key: key);
+
   @override
-  _FavoriteWidgetState createState() => new _FavoriteWidgetState();
+  State<StatefulWidget> createState() {
+    return new _TapboxAState();
+  }
 }
 
-class _FavoriteWidgetState extends State<FavoriteWidget> {
-  bool _isFavorited = true;
-  int _favoriteCount = 41;
+class _TapboxAState extends State<TabBoxA> {
+  bool _active = false;
 
-  void _toggleFavorite() {
+  void _handleTap() {
     setState(() {
-      if (_isFavorited) {
-        _favoriteCount -= 1;
-        _isFavorited = false;
-      } else {
-        _favoriteCount += 1;
-        _isFavorited = true;
-      }
+      _active = !_active;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Row(mainAxisSize: MainAxisSize.min, children: [
-      Container(
-        padding: EdgeInsets.all(0.0),
-        child: IconButton(
-          icon: (_isFavorited ? Icon(Icons.star) : Icon(Icons.star_border)),
-          color: Colors.red[500],
-          onPressed: _toggleFavorite,
-        ),
+    return GestureDetector(
+        onTap: _handleTap,
+        child: Container(
+          child: Center(
+            child: Text(
+              _active ? 'TapBoxA Active' : 'TapBoxA Inactive',
+              style: TextStyle(fontSize: 32.0, color: Colors.white),
+            ),
+          ),
+          width: globalWidth,
+          height: globalHeight,
+          decoration: BoxDecoration(
+              color: _active ? Colors.lightGreen[700] : Colors.grey[600]),
+        ));
+  }
+}
+
+//------------------ TapBoxB -----------------------------
+//Parentwidget管理state
+class ParentWidget extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return new _ParentWidgetState();
+  }
+}
+
+class _ParentWidgetState extends State<ParentWidget> {
+  bool _active = false;
+  void _handleTapboxChanged(bool newValue) {
+    setState(() {
+      _active = newValue;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      //TODO 
+      // child: TapBoxB(
+      child: TapBoxC(
+        active: _active,
+        onChanged: _handleTapboxChanged,
       ),
-      SizedBox(
-          width: 18.0,
-          child: Container(
-            child: Text('$_favoriteCount'),
-          ))
-    ]);
+    );
+  }
+}
+
+class TapBoxB extends StatelessWidget {
+  TapBoxB({Key key, this.active = false, @required this.onChanged})
+      : super(key: key);
+
+  final bool active;
+  final ValueChanged<bool> onChanged;
+
+  void _handleTap() {
+    onChanged(!active);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new GestureDetector(
+        onTap: _handleTap,
+        child: Container(
+          child: Center(
+            child: Text(
+              active ? 'TapBoxB Active' : 'TapBoxB Inactive',
+              style: TextStyle(fontSize: 32.0, color: Colors.white),
+            ),
+          ),
+          width: globalWidth,
+          height: globalHeight,
+          decoration: BoxDecoration(
+              color: active ? Colors.lightGreen[700] : Colors.grey[600]),
+        ));
+  }
+}
+
+//------------------ TapBoxC -----------------------------
+//混合方式管理state
+class TapBoxC extends StatefulWidget {
+  TapBoxC({Key key, this.active = false, @required this.onChanged})
+      : super(key: key);
+
+  final bool active;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  _TapBoxCState createState() {
+    return new _TapBoxCState();
+  }
+}
+
+class _TapBoxCState extends State<TapBoxC> {
+  bool _highLight = false;
+
+  void _handleTapDown(TapDownDetails details) {
+    setState(() {
+      _highLight = true;
+    });
+  }
+
+  void _handleTapUp(TapUpDetails datails) {
+    setState(() {
+      _highLight = false;
+    });
+  }
+
+  void _handleTapCancel() {
+    setState(() {
+      _highLight = false;
+    });
+  }
+
+  void _handleTap() {
+    widget.onChanged(!widget.active);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new GestureDetector(
+      onTap: _handleTap,
+      onTapDown: _handleTapDown,
+      onTapUp: _handleTapUp,
+      onTapCancel: _handleTapCancel,
+      child: Container(
+        child: Center(
+          child: Text(
+            widget.active ? "TapBoxC Active" : 'TapBoxC Inactive',
+            style: TextStyle(fontSize: 32.0, color: Colors.white),
+          ),
+        ),
+        width: globalWidth,
+        height: globalHeight,
+        decoration: BoxDecoration(
+            color: widget.active ? Colors.lightGreen[700] : Colors.grey[600],
+            border: _highLight
+                ? Border.all(color: Colors.teal[700], width: globalBorder)
+                : null),
+      ),
+    );
   }
 }
