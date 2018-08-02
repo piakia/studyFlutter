@@ -31,7 +31,7 @@ class RandomWordListViewState extends State<RandomWordListView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('不是你喜欢的单词'),
-        actions: <Widget>[
+        actions: [
           IconButton(
             icon: Icon(Icons.list),
             onPressed: _pushSaved,
