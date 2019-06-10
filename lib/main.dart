@@ -1,7 +1,11 @@
+import 'package:first_app/ListViewApp.dart';
 import 'package:flutter/material.dart';
 
-const globalWidth = 300.0;
-const globalHeight = 300.0;
+import 'Global.dart';
+import 'route.dart';
+
+const globalWidth = 100.0;
+const globalHeight = 100.0;
 const globalBorder = 10.0;
 
 void main() {
@@ -12,18 +16,44 @@ class InfoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-      title: 'interactive',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('interactive'),
-        ),
-        body: Center(
-          //TODO 
-          // child: TabBoxA(),
-          child: ParentWidget(),
-        ),
-      ),
-    );
+        title: 'Welcome to home page',
+        //这里设置路由规则
+        routes: routes,
+        home: Builder(
+          builder: (context) {
+            Global.context = context;
+            return Scaffold(
+              appBar: AppBar(
+                title: Text('Welcome to home page'),
+                centerTitle: false,
+              ),
+              body: ListView(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(top: 10, left: 12, right: 12),
+                    child: MaterialButton(
+                      child: Text("基本组件的使用"),
+                      onPressed: () {
+                        Navigator.pushNamed(context, ROUTE_BASIC_WIDGET);
+                      },
+                      color: Colors.blue,
+                      textColor: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              floatingActionButton: FloatingActionButton(
+                child: Text("list"),
+                onPressed: () => {
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return ListViewApp();
+                      }))
+                    },
+              ),
+            );
+          },
+        ));
   }
 }
 
@@ -77,6 +107,7 @@ class ParentWidget extends StatefulWidget {
 
 class _ParentWidgetState extends State<ParentWidget> {
   bool _active = false;
+
   void _handleTapboxChanged(bool newValue) {
     setState(() {
       _active = newValue;
@@ -86,7 +117,6 @@ class _ParentWidgetState extends State<ParentWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      //TODO 
       // child: TapBoxB(
       child: TapBoxC(
         active: _active,

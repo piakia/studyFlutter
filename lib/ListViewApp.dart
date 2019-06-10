@@ -1,12 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
-
-void main() => runApp(new ListViewApp());
+import 'package:flutter/material.dart';
 
 class ListViewApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return MaterialApp(
         title: '很对',
         home: Scaffold(
@@ -30,6 +27,7 @@ class RandomWordListViewState extends State<RandomWordListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: BackButton(color: Colors.white),
         title: Text('不是你喜欢的单词'),
         actions: [
           IconButton(
@@ -74,6 +72,12 @@ class RandomWordListViewState extends State<RandomWordListView> {
         alreadySaved ? Icons.favorite : Icons.favorite_border,
         color: alreadySaved ? Colors.red : null,
       ),
+      subtitle: Image.asset(
+        'images/lake.jpg',
+        width: 600.0,
+        height: 240.0,
+        fit: BoxFit.cover,
+      ),
       onTap: () {
         setState(() {
           if (alreadySaved) {
@@ -102,7 +106,8 @@ class RandomWordListViewState extends State<RandomWordListView> {
 
       //下一个页面的layout
       return Scaffold(
-        appBar: AppBar(title: Text('Saved Suggestions'),
+        appBar: AppBar(
+          title: Text('Saved Suggestions'),
         ),
         body: ListView(children: divided),
       );
